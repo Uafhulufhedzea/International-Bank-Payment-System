@@ -1,0 +1,41 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    name: Security Lint & Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run ESLint Security Scan
+        working-directory: ./backend
+        run: npx eslint . --ext .js --ignore-pattern node_modules
+
+      - name: Run npm Audit (Backend)
+        working-directory: ./backend
+        run: npm audit --audit-level=high || true
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run npm Audit (Frontend)
+        working-directory: ./frontend
+        run: npm audit --audit-level=high || true

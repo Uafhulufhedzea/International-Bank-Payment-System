@@ -1,7 +1,7 @@
 const validateRegistration = (req, res, next) => {
     const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
     const nameRegex = /^[a-zA-Z\s]{2,50}$/;
-    const numberRegex = /^\d+$/; // Only digits for ID and Account
+    const numberRegex = /^\d+$/;
 
     const { username, fullName, idNumber, accountNumber } = req.body;
 

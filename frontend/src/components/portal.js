@@ -13,14 +13,12 @@ const Portal = () => {
         }
     };
 
-    // Refresh the list every time the component loads
     useEffect(() => {
         fetchPayments();
     }, []);
 
     const handleSubmitToSwift = (index) => {
         alert(`Transaction ${index + 1} has been securely submitted to SWIFT!`);
-        // In a real app, you would update the status in the backend here
     };
 
     return (

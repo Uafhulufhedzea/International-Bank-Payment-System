@@ -6,7 +6,7 @@ import Portal from './components/portal';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [view, setView] = useState('register'); // 'register' or 'login'
+  const [view, setView] = useState('register');
 
   const handleLogin = (username) => {
     setLoggedInUser(username);
@@ -24,7 +24,6 @@ function App() {
       </nav>
 
       {!loggedInUser ? (
-        // Not logged in: show Register or Login
         <div>
           <div style={{ padding: '10px', background: '#eee' }}>
             <button onClick={() => setView('register')}>Register</button>{' | '}
@@ -34,7 +33,6 @@ function App() {
           {view === 'login' && <Login onLogin={handleLogin} />}
         </div>
       ) : (
-        // Logged in: show Payment and Portal
         <div>
           <div style={{ padding: '10px', background: '#d4edda' }}>
             <span>Welcome, <b>{loggedInUser}</b>!</span>{' | '}
@@ -42,8 +40,6 @@ function App() {
           </div>
           <Payment />
 
-          {/* Employee Portal — shown here for testing/demo purposes only.
-              In production, this would be a separate staff-only application. */}
           <div style={{ marginTop: '40px', padding: '10px', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '5px', marginLeft: '40px', marginRight: '40px' }}>
             <p style={{ margin: '5px 0', fontStyle: 'italic', color: '#856404' }}>
               <b>Testing Only:</b> The portal below is the Employee Verification Portal. 

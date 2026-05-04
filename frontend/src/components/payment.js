@@ -12,7 +12,6 @@ const Payment = () => {
     const handlePayment = async (e) => {
         e.preventDefault();
         
-        //SWIFT Code Whitelisting
         const swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
         if (!swiftRegex.test(swiftCode)) {
             setStatus("Invalid SWIFT Code format.");

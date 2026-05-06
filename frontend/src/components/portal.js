@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// ============================================================
-// EMPLOYEE VERIFICATION PORTAL
-// Scenario: Bank employees view pending transactions, verify
+// Employee Verification Portal
+// Bank employees view pending transactions, verify
 // the payee account and SWIFT code, click "Verified" to confirm,
 // then click "Submit to SWIFT" to forward the transaction.
-// ============================================================
 const Portal = () => {
     const [payments, setPayments] = useState([]);
 

@@ -84,40 +84,23 @@ All input is validated using **strict RegEx whitelist patterns** on both the cli
 
 ---
 
-## How to Run (Setup Guide)
+## How to Run (Quick Start — 3 Steps)
 
 ### Prerequisites
-- **Node.js** v18+ installed
-- **Azure SQL Database** (or any MSSQL instance)
-- **OpenSSL** (for generating SSL certificates)
+- **Node.js** v18+ installed ([download here](https://nodejs.org/))
 
-### Step 1: Clone the Repository
+> **Note:** SSL certificates (`key.pem`, `cert.pem`) and database credentials (`.env.example`) are already included in the repository. No additional setup required.
+
+### Step 1: Clone and Configure
 ```bash
 git clone https://github.com/Uafhulufhedzea/International-Bank-Payment-System.git
-cd International-Bank-Payment-System
-```
-
-### Step 2: Generate SSL Certificates
-```bash
-cd backend
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
-```
-
-### Step 3: Configure Database Connection
-Create a `.env` file in the `backend/` folder:
-```env
-DB_SERVER=your-server.database.windows.net
-DB_DATABASE=BankPayment
-DB_USER=your-username
-DB_PASSWORD=your-password
-DB_PORT=1433
-```
-> **Note:** You must also add your IP address to the Azure SQL Server firewall rules (Azure Portal → SQL Server → Networking → Add client IP).
-
-### Step 4: Start the Backend
-```bash
-cd backend
+cd International-Bank-Payment-System/backend
+cp .env.example .env
 npm install
+```
+
+### Step 2: Start the Backend
+```bash
 node server.js
 ```
 You should see:
@@ -129,15 +112,21 @@ Database initialized successfully.
 Secure HTTPS Server running at https://localhost:5000
 ```
 
-### Step 5: Start the Frontend
+### Step 3: Start the Frontend
+Open a **new terminal** window:
 ```bash
-cd frontend
+cd International-Bank-Payment-System/frontend
 npm install
 npm start
 ```
 Opens at `http://localhost:3000`.
 
-> **SSL Warning:** The browser will warn about the self-signed certificate. Click **Advanced** → **Proceed to localhost** to continue. First visit `https://localhost:5000` directly in the browser and accept the certificate there too, so API calls work.
+> **Important — SSL Certificate Warning:** 
+> 1. First visit **https://localhost:5000** in your browser
+> 2. Click **Advanced** → **Proceed to localhost (unsafe)** to accept the self-signed certificate
+> 3. Then go to **http://localhost:3000** to use the app
+> 
+> This step is required because the app uses a self-signed SSL certificate for development (demonstrating HTTPS/SSL implementation).
 
 ---
 
@@ -182,7 +171,7 @@ Try registering with invalid inputs:
 - Click **Submit to SWIFT** next to the transaction.
 
 ### Verify Data in Database
-You can verify data is stored in Azure SQL by checking the database via Azure Portal → BankPayment → Query editor, or by running:
+Data is stored in the Azure SQL database. You can verify by checking the backend terminal output or by running:
 ```bash
 cd backend
 node -e "require('dotenv').config(); const sql=require('mssql'); sql.connect({server:process.env.DB_SERVER,database:process.env.DB_DATABASE,user:process.env.DB_USER,password:process.env.DB_PASSWORD,port:1433,options:{encrypt:true,trustServerCertificate:false}}).then(async p=>{const u=await p.request().query('SELECT id,username,fullName,accountNumber FROM Users');console.table(u.recordset);const t=await p.request().query('SELECT * FROM Transactions');console.table(t.recordset);sql.close()})"
@@ -192,12 +181,10 @@ node -e "require('dotenv').config(); const sql=require('mssql'); sql.connect({se
 
 ## Can Someone Clone and Run This Project?
 
-**Yes, but they need to set up 3 things first:**
+**Yes — only Node.js is required.** Everything else is included:
 
-1. **SSL Certificates** — Run the `openssl` command in Step 2 to generate `key.pem` and `cert.pem` (these are excluded from Git via `.gitignore` for security).
+- **SSL certificates** (`key.pem`, `cert.pem`) are included in the repository for easy testing.
+- **Database credentials** are provided in `.env.example` — just copy it to `.env`.
+- **Azure SQL firewall** is configured to allow connections from any IP.
 
-2. **Azure SQL Database** — Create their own Azure SQL database and configure the `.env` file with their credentials (the `.env` file is excluded from Git to protect credentials).
-
-3. **Firewall Rule** — Add their IP to the Azure SQL Server firewall rules.
-
-All three exclusions (`.env`, `*.pem`) are **intentional security practices** — credentials and certificates should never be committed to source control.
+Simply follow the **3-step Quick Start** above.

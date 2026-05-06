@@ -19,10 +19,21 @@ const Payment = () => {
         
         
         // input whitelisting: RegEx patterns
-        // Client-side validation ensures only valid SWIFT codes are submitted. 
+        // Client-side validation ensures all payment fields are safe
+        // before being sent to the server.
        
-        
+        const amountRegex = /^\d+(\.\d{1,2})?$/;
+        const accountRegex = /^[a-zA-Z0-9]{5,34}$/;
         const swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
+
+        if (!amountRegex.test(amount)) {
+            setStatus("Invalid amount format.");
+            return;
+        }
+        if (!accountRegex.test(payeeAccount)) {
+            setStatus("Invalid payee account format (5-34 alphanumeric characters).");
+            return;
+        }
         if (!swiftRegex.test(swiftCode)) {
             setStatus("Invalid SWIFT Code format.");
             return;

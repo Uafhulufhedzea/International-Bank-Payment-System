@@ -27,7 +27,9 @@ const Register = () => {
         
         const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
         const nameRegex = /^[a-zA-Z\s]{2,50}$/;
-        const numberRegex = /^\d{6,13}$/;
+        const idRegex = /^\d{6,13}$/;
+        const accountRegex = /^\d{6,12}$/;
+        const passwordRegex = /^.{8,}$/;
 
         if (!usernameRegex.test(formData.username)) {
             setMessage("Username must be 3-20 alphanumeric characters.");
@@ -37,12 +39,16 @@ const Register = () => {
             setMessage("Full name must contain only letters and spaces.");
             return;
         }
-        if (!numberRegex.test(formData.idNumber)) {
+        if (!idRegex.test(formData.idNumber)) {
             setMessage("ID number must be 6-13 digits.");
             return;
         }
-        if (!numberRegex.test(formData.accountNumber)) {
-            setMessage("Account number must be 6-13 digits.");
+        if (!accountRegex.test(formData.accountNumber)) {
+            setMessage("Account number must be 6-12 digits.");
+            return;
+        }
+        if (!passwordRegex.test(formData.password)) {
+            setMessage("Password must be at least 8 characters.");
             return;
         }
 

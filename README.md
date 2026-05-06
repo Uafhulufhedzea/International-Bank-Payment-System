@@ -3,7 +3,6 @@
 ## Overview
 A secure international payment system built with **React** (frontend) and **Express.js** (backend API). Customers can register, log in, and make international payments via SWIFT. Employees can verify and forward transactions to SWIFT through a dedicated portal. All data is stored in a **secured Azure SQL database**.
 
-This project was developed for **APDS7311 — Task 2** and meets all marking criteria for password security, input whitelisting, SSL, attack protection, and DevSecOps.
 
 ## Project Structure
 ```
@@ -36,16 +35,15 @@ bank-payment-system/
 
 ---
 
-## Marking Criteria Implementation
 
-### 1. Password Security [10 Marks]
+### 1. Password Security
 - Passwords are **hashed and salted** using **bcrypt** with a salt factor of 10.
 - `bcrypt.genSalt()` generates a unique random salt for each password.
 - `bcrypt.hash()` produces a one-way hash — the original password is **NEVER stored**.
 - `bcrypt.compare()` verifies passwords without exposing the hash.
 - **Files:** `backend/server.js` (register and login endpoints)
 
-### 2. Input Whitelisting [10 Marks]
+### 2. Input Whitelisting
 All input is validated using **strict RegEx whitelist patterns** on both the client and server side:
 - **Username:** `/^[a-zA-Z0-9]{3,20}$/` — alphanumeric only, 3–20 characters
 - **Full Name:** `/^[a-zA-Z\s]{2,50}$/` — letters and spaces only
@@ -56,13 +54,13 @@ All input is validated using **strict RegEx whitelist patterns** on both the cli
 - **SWIFT Code:** `/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/` — standard 8 or 11 character SWIFT/BIC
 - **Files:** `backend/middleware/validator.js`, `backend/server.js`, `frontend/src/components/register.js`, `login.js`, `payment.js`
 
-### 3. Securing Data in Transit with SSL [20 Marks]
+### 3. Securing Data in Transit with SSL
 - The backend runs exclusively on **HTTPS** using SSL certificates (`key.pem`, `cert.pem`).
 - All frontend API calls use `https://localhost:5000`.
 - The Azure SQL database connection uses `encrypt: true` (TLS encryption).
 - **Files:** `backend/server.js` (HTTPS server), `backend/config/db.js` (encrypted DB connection)
 
-### 4. Protecting Against Attacks [30 Marks]
+### 4. Protecting Against Attacks
 | Protection | Tool/Method | What It Prevents |
 |---|---|---|
 | HTTP Security Headers | **Helmet.js** | XSS, clickjacking, MIME sniffing |
@@ -74,7 +72,7 @@ All input is validated using **strict RegEx whitelist patterns** on both the cli
 | Credential Protection | **.env** environment variables | Credential leakage in source code |
 - **Files:** `backend/server.js`, `backend/models/User.js`, `backend/models/transaction.js`, `backend/config/db.js`
 
-### 5. DevSecOps Pipeline [10 Marks]
+### 5. DevSecOps Pipeline
 - **GitHub Actions CI/CD:** Triggered on every push/PR to `main` branch.
 - **ESLint + eslint-plugin-security:** Scans code for security vulnerabilities (eval, injection, timing attacks).
 - **npm audit:** Checks both backend and frontend dependencies for known vulnerabilities.
@@ -136,11 +134,6 @@ Opens at `http://localhost:3000`.
 3. **Make Payment** — Enter amount, select currency, choose provider (SWIFT), enter payee account and SWIFT code, click **Pay Now**.
 4. **Logout** — End session.
 
-## Employee Portal
-- Displays all pending transactions from the database in a table.
-- Employees can verify payee account info and SWIFT codes.
-- Click **Submit to SWIFT** to forward a verified transaction.
-
 ---
 
 ## Testing Guide
@@ -179,12 +172,11 @@ node -e "require('dotenv').config(); const sql=require('mssql'); sql.connect({se
 
 ---
 
-## Can Someone Clone and Run This Project?
+## How to Clone and Run This Project?
 
-**Yes — only Node.js is required.** Everything else is included:
+**only Node.js is required.** Everything else is included:
 
 - **SSL certificates** (`key.pem`, `cert.pem`) are included in the repository for easy testing.
 - **Database credentials** are provided in `.env.example` — just copy it to `.env`.
 - **Azure SQL firewall** is configured to allow connections from any IP.
 
-Simply follow the **3-step Quick Start** above.

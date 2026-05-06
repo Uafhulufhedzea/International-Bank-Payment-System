@@ -85,7 +85,7 @@ All input is validated using **strict RegEx whitelist patterns** on both the cli
 ## How to Run (Quick Start — 3 Steps)
 
 ### Prerequisites
-- **Node.js** v18+ installed ([download here](https://nodejs.org/))
+- **Node.js** v18+ installed
 
 > **Note:** SSL certificates (`key.pem`, `cert.pem`) and database credentials (`.env.example`) are already included in the repository. No additional setup required.
 

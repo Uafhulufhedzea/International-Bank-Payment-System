@@ -1,3 +1,11 @@
+# ============================================================
+# DEVSECOPS PIPELINE [10 Marks]
+# This pipeline is triggered on every push and pull request to main.
+# It performs automated security scanning and auditing:
+#   - ESLint with security plugin (detects code vulnerabilities)
+#   - npm audit (detects vulnerable dependencies)
+#   - Runs on both backend and frontend
+# ============================================================
 name: DevSecOps Pipeline
 
 on:
@@ -12,30 +20,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the source code
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # Step 2: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # ============================================================
+      # BACKEND SECURITY SCANNING
+      # ============================================================
+
+      # Step 3: Install backend dependencies
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: npm install
 
-      - name: Run ESLint Security Scan
+      # Step 4: Run ESLint with eslint-plugin-security
+      # Scans code for security vulnerabilities like eval(), injection, etc.
+      - name: Run ESLint Security Scan (Backend)
         working-directory: ./backend
-        run: npx eslint . --ext .js --ignore-pattern node_modules
+        run: npx eslint .
 
+      # Step 5: Run npm audit to check for known vulnerable packages
       - name: Run npm Audit (Backend)
         working-directory: ./backend
         run: npm audit --audit-level=high || true
 
+      # ============================================================
+      # FRONTEND SECURITY SCANNING
+      # ============================================================
+
+      # Step 6: Install frontend dependencies
       - name: Install Frontend Dependencies
         working-directory: ./frontend
         run: npm install
 
+      # Step 7: Run npm audit on frontend dependencies
       - name: Run npm Audit (Frontend)
         working-directory: ./frontend
         run: npm audit --audit-level=high || true

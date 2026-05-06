@@ -1,11 +1,11 @@
-# ============================================================
-# DEVSECOPS PIPELINE [10 Marks]
+
+# DEVSECOPS PIPELINE
 # This pipeline is triggered on every push and pull request to main.
 # It performs automated security scanning and auditing:
 #   - ESLint with security plugin (detects code vulnerabilities)
 #   - npm audit (detects vulnerable dependencies)
 #   - Runs on both backend and frontend
-# ============================================================
+
 name: DevSecOps Pipeline
 
 on:
@@ -30,9 +30,7 @@ jobs:
         with:
           node-version: '20'
 
-      # ============================================================
       # BACKEND SECURITY SCANNING
-      # ============================================================
 
       # Step 3: Install backend dependencies
       - name: Install Backend Dependencies
@@ -50,10 +48,8 @@ jobs:
         working-directory: ./backend
         run: npm audit --audit-level=high || true
 
-      # ============================================================
       # FRONTEND SECURITY SCANNING
-      # ============================================================
-
+   
       # Step 6: Install frontend dependencies
       - name: Install Frontend Dependencies
         working-directory: ./frontend

@@ -1,0 +1,80 @@
+version: 2.1
+
+# Define specialized pipeline executors
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:20.11.0 # Secure, verified CircleCI Node image base
+    working_directory: ~/repo
+
+jobs:
+  build_and_test:
+    executor: node-executor
+    steps:
+      - checkout # Pull source code from GitHub repository
+
+      # Restore dependency cache to optimize pipeline execution speed
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+
+      - run:
+          name: Install Core Dependencies
+          command: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # =========================================================================
+      # SOFTWARE COMPOSITION ANALYSIS (SCA)
+      # =========================================================================
+      # Automatically scans third-party open-source packages for hidden risks.
+      # Blocks the pipeline if any critical or high-risk vulnerabilities are found.
+      # =========================================================================
+      - run:
+          name: Run Software Composition Analysis (SCA Dependency Audit)
+          command: npm audit --audit-level=high
+
+      # =========================================================================
+      # API INTEGRITY & APPLICATION VALIDATION
+      # =========================================================================
+      # Pre-evaluates core server routes and entry points for compiling syntax errors
+      # to ensure the backend web application runs smoothly before deployment.
+      # =========================================================================
+      - run:
+          name: Validate Backend Code Integrity & Syntax Check
+          command: node --check backend/server.js
+
+      # =========================================================================
+      # STATIC APPLICATION SECURITY TESTING (SAST) - SONARQUBE
+      # =========================================================================
+      # Analyzes custom source code architecture for bugs, security hotspots, and smells.
+      # =========================================================================
+      - run:
+          name: Run Automated SonarQube Security Scan
+          command: |
+            if [ -z "$SONAR_TOKEN" ]; then
+              echo "Error: SONAR_TOKEN environment variable is not defined."
+              echo "Please configure security secrets inside your CircleCI project settings."
+              exit 1
+            fi
+            npx sonar-scanner \
+              -Dsonar.projectKey=international-bank-payment-system \
+              -Dsonar.projectName="International Bank Payment System" \
+              -Dsonar.sources=backend,src \
+              -Dsonar.exclusions=**/node_modules/**,**/key.pem,**/cert.pem \
+              -Dsonar.host.url=${SONAR_HOST_URL:-"https://sonarcloud.io"} \
+              -Dsonar.login=${SONAR_TOKEN}
+
+workflows:
+  version: 2
+  security_and_deployment_pipeline:
+    jobs:
+      - build_and_test:
+          filters:
+            branches:
+              only:
+                - main

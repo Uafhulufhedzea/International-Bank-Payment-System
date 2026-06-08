@@ -6,15 +6,21 @@ import Portal from './components/portal';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [view, setView] = useState('register');
+  const [loggedInEmployee, setLoggedInEmployee] = useState(null);
+  const [view, setView] = useState('welcome');
 
   const handleLogin = (username) => {
     setLoggedInUser(username);
   };
 
+  const handleEmployeeLogin = (username) => {
+    setLoggedInEmployee(username);
+  };
+
   const handleLogout = () => {
     setLoggedInUser(null);
-    setView('login');
+    setLoggedInEmployee(null);
+    setView('welcome');
   };
 
   return (
@@ -23,30 +29,61 @@ function App() {
         <h3 style={{ margin: 0 }}>International Bank Payment System</h3>
       </nav>
 
-      {!loggedInUser ? (
+      {/* Employee logged in - show portal */}
+      {loggedInEmployee ? (
         <div>
-          <div style={{ padding: '10px', background: '#eee' }}>
-            <button onClick={() => setView('register')}>Register</button>{' | '}
-            <button onClick={() => setView('login')}>Login</button>
+          <div style={{ padding: '10px', background: '#cce5ff' }}>
+            <span>Employee: <b>{loggedInEmployee}</b></span>{' | '}
+            <button onClick={() => handleLogout()}>Logout</button>
           </div>
-          {view === 'register' && <Register />}
-          {view === 'login' && <Login onLogin={handleLogin} />}
+          <Portal />
         </div>
-      ) : (
+
+      /* Customer logged in - show payment form */
+      ) : loggedInUser ? (
         <div>
           <div style={{ padding: '10px', background: '#d4edda' }}>
             <span>Welcome, <b>{loggedInUser}</b>!</span>{' | '}
             <button onClick={() => handleLogout()}>Logout</button>
           </div>
           <Payment />
+        </div>
 
-          <div style={{ marginTop: '40px', padding: '10px', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '5px', marginLeft: '40px', marginRight: '40px' }}>
-            <p style={{ margin: '5px 0', fontStyle: 'italic', color: '#856404' }}>
-              <b>Testing Only:</b> The portal below is the Employee Verification Portal. 
-              It is included here solely to demonstrate that submitted payments are being stored and can be verified by bank employees.
-            </p>
-          </div>
-          <Portal />
+      /* Not logged in - show welcome / register / login */
+      ) : (
+        <div>
+          {view === 'welcome' && (
+            <div style={{ padding: '60px 40px' }}>
+              <h1 style={{ fontSize: '28px', marginBottom: '10px' }}>Welcome</h1>
+              <p style={{ color: '#555', marginBottom: '30px' }}>
+                Secure international payments portal. Register as a new customer or log in to continue.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                <button onClick={() => setView('register')}
+                  style={{ padding: '12px 30px', fontSize: '16px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                  Register
+                </button>
+                <button onClick={() => setView('login')}
+                  style={{ padding: '12px 30px', fontSize: '16px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                  Login
+                </button>
+              </div>
+            </div>
+          )}
+
+          {(view === 'register' || view === 'login') && (
+            <div style={{ padding: '10px', background: '#eee' }}>
+              <button onClick={() => setView('welcome')}
+                style={{ marginRight: '10px', cursor: 'pointer' }}>← Back</button>
+              <button onClick={() => setView('register')}
+                style={{ fontWeight: view === 'register' ? 'bold' : 'normal', cursor: 'pointer' }}>Register</button>{' | '}
+              <button onClick={() => setView('login')}
+                style={{ fontWeight: view === 'login' ? 'bold' : 'normal', cursor: 'pointer' }}>Login</button>
+            </div>
+          )}
+
+          {view === 'register' && <Register />}
+          {view === 'login' && <Login onLogin={handleLogin} onEmployeeLogin={handleEmployeeLogin} />}
         </div>
       )}
     </div>

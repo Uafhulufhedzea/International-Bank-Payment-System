@@ -46,12 +46,13 @@ jobs:
           name: Run Automated SonarQube Security Scan
           command: |
             if [ -z "$SONAR_TOKEN" ]; then
-              echo "SONAR_TOKEN not configured. Skipping SonarQube scan."
-              echo "To enable: add SONAR_TOKEN in CircleCI Project Settings > Environment Variables."
-              exit 0
+              echo "Error: SONAR_TOKEN environment variable is not defined."
+              echo "Please configure security secrets inside your CircleCI project settings."
+              exit 1
             fi
             npx sonar-scanner \
               -Dsonar.projectKey=international-bank-payment-system \
+              -Dsonar.organization=uafhulufhedzea \
               -Dsonar.projectName="International Bank Payment System" \
               -Dsonar.sources=backend,src \
               -Dsonar.exclusions=**/node_modules/**,**/key.pem,**/cert.pem \

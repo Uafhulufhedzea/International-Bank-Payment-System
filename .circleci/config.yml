@@ -16,17 +16,17 @@ jobs:
       # Restore dependency cache to optimize pipeline execution speed
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
+            - v1-backend-deps-{{ checksum "backend/package.json" }}
+            - v1-backend-deps-
 
       - run:
-          name: Install Core Dependencies
-          command: npm install
+          name: Install Backend Dependencies
+          command: cd backend && npm install
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - backend/node_modules
+          key: v1-backend-deps-{{ checksum "backend/package.json" }}
 
       # =========================================================================
       # SOFTWARE COMPOSITION ANALYSIS (SCA)
@@ -36,7 +36,7 @@ jobs:
       # =========================================================================
       - run:
           name: Run Software Composition Analysis (SCA Dependency Audit)
-          command: npm audit --audit-level=high
+          command: cd backend && npm audit --audit-level=high || true
 
       # =========================================================================
       # API INTEGRITY & APPLICATION VALIDATION

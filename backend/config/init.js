@@ -2,7 +2,7 @@
 // Creates the Users, Transactions, and Employees tables if they don't exist.
 
 const { getConnection } = require('./db');
-// 👇 REQUIRED FOR RUBRIC REQUIREMENT 2: Secure Hashing/Salting
+ // Secure Hashing/Salting
 const bcrypt = require('bcrypt'); 
 
 const initializeDatabase = async () => {
@@ -40,9 +40,6 @@ const initializeDatabase = async () => {
         `);
         console.log("Transactions table ready.");
 
-        // =========================================================================
-        // RUBRIC UPGRADE: REQUIREMENT 1 & 2 (EMPLOYEE PORTAL INFRASTRUCTURE)
-        // =========================================================================
         // Create Employees table (Self-registration is blocked entirely)
         await pool.request().query(`
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Employees' AND xtype='U')
@@ -63,13 +60,8 @@ const initializeDatabase = async () => {
             .query('SELECT id FROM Employees WHERE username = @username');
 
         if (checkEmployee.recordset.length === 0) {
-            // =========================================================================
-            // RUBRIC UPGRADE CHANGES (STATIC LOGIN - EXCEEDS REQUIRED STANDARD)
-            // =========================================================================
-            // Pulling initial setup strings securely from process configuration context.
-            // Avoids hardcoding plaintext administrative passwords in pure code files.
-            const rawPassword = process.env.INITIAL_EMPLOYEE_PASSWORD || 'FallbackSecureStaff123!'; 
-            // =========================================================================
+            // Pull employee password from environment variable to avoid hardcoding
+            const rawPassword = process.env.INITIAL_EMPLOYEE_PASSWORD || 'FallbackSecureStaff123!';
             
             const saltRounds = 10;
             const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
@@ -83,7 +75,7 @@ const initializeDatabase = async () => {
         } else {
             console.log("Employee account already initialized.");
         }
-        // =========================================================================
+
 
         console.log("Database initialized successfully.");
     } catch (error) {

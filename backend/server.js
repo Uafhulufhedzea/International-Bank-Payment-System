@@ -45,10 +45,7 @@ app.post('/api/register', validateRegistration, async (req, res) => {
     try {
         const { username, fullName, idNumber, accountNumber, password } = req.body;
 
-        // =========================================================================
-        // 🌟 RESTORED RUBRIC UPGRADE: PASSWORD COMPLEXITY (EXCEEDS STANDARD)
-        // =========================================================================
-        // Restored: Re-enforces strict complexity validation before hashing.
+        // Password complexity validation
         // Requires: Minimum 8 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character.
         const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
         
@@ -58,7 +55,7 @@ app.post('/api/register', validateRegistration, async (req, res) => {
                 error: "Weak password. System rules require at least 8 characters, an uppercase letter, a lowercase letter, a numeric digit, and an explicit special symbol (@$!%*?&#)." 
             });
         }
-        // =========================================================================
+
 
         // Password security: Hashing and Salting
         // bcrypt.genSalt() generates a unique random salt.
@@ -174,9 +171,6 @@ app.get('/api/transactions', async (req, res) => {
     res.json(transactions);
 });
 
-// =========================================================================
-// 🌟 RESTORED RUBRIC UPGRADE: EMPLOYEE BUSINESS WORKFLOW & INTEGRATION
-// =========================================================================
 const { getConnection } = require('./config/db'); 
 const sql = require('mssql');
 
@@ -246,7 +240,7 @@ console.error("SWIFT Submission Routing Error:", error);
 res.status(500).json({ error: "Internal Server Error" });
 }
 });
-// =========================================================================
+
 // Securing data in transit with SSL:
 // The server uses HTTPS with a generated SSL certificate and key.
 // This encrypts ALL traffic between the client and server,

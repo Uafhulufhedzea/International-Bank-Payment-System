@@ -28,31 +28,20 @@ jobs:
             - backend/node_modules
           key: v1-backend-deps-{{ checksum "backend/package.json" }}
 
-      # =========================================================================
       # SOFTWARE COMPOSITION ANALYSIS (SCA)
-      # =========================================================================
-      # Automatically scans third-party open-source packages for hidden risks.
-      # Blocks the pipeline if any critical or high-risk vulnerabilities are found.
-      # =========================================================================
+      # Scans third-party packages for hidden risks.
       - run:
           name: Run Software Composition Analysis (SCA Dependency Audit)
           command: cd backend && npm audit --audit-level=high || true
 
-      # =========================================================================
       # API INTEGRITY & APPLICATION VALIDATION
-      # =========================================================================
-      # Pre-evaluates core server routes and entry points for compiling syntax errors
-      # to ensure the backend web application runs smoothly before deployment.
-      # =========================================================================
+      # Checks server routes for syntax errors before deployment.
       - run:
           name: Validate Backend Code Integrity & Syntax Check
           command: node --check backend/server.js
 
-      # =========================================================================
       # STATIC APPLICATION SECURITY TESTING (SAST) - SONARQUBE
-      # =========================================================================
-      # Analyzes custom source code architecture for bugs, security hotspots, and smells.
-      # =========================================================================
+      # Analyzes source code for bugs, security hotspots, and code smells.
       - run:
           name: Run Automated SonarQube Security Scan
           command: |

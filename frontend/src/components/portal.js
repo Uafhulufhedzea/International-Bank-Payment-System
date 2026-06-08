@@ -37,7 +37,6 @@ const Portal = () => {
     };
 
     // Scenario: Employee clicks "Submit to SWIFT" to securely write transaction update to database
-    // 🌟 UPGRADED TO CONNECT TO LIVE ENDPOINT FOR RUBRIC ALIGNMENT
     const handleSubmitToSwift = async (index, transactionId) => {
         if (!payments[index].verified) {
             alert("Please verify the transaction before submitting to SWIFT.");
@@ -64,7 +63,7 @@ const Portal = () => {
         <div style={{ padding: '40px', backgroundColor: '#f4f4f4', marginTop: '20px' }}>
             <h2>Employee Verification Portal</h2>
             <button onClick={fetchPayments} style={{ padding: '8px 12px', marginBottom: '10px', cursor: 'pointer' }}>
-                🔄 Refresh List
+                Refresh List
             </button>
             <table border="1" cellPadding="8" style={{ width: '100%', marginTop: '10px', textAlign: 'left', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
                 <thead>
@@ -91,7 +90,7 @@ const Portal = () => {
                                 <td><code>{p.swiftCode}</code></td>
                                 <td>
                                     {p.status === 'Submitted to SWIFT' ? (
-                                        <span style={{ color: '#0056b3', fontWeight: 'bold' }}>🌐 Dispatched to SWIFT</span>
+                                        <span style={{ color: '#0056b3', fontWeight: 'bold' }}>Dispatched to SWIFT</span>
                                     ) : p.verified ? (
                                         <span style={{ color: '#28a745', fontWeight: 'bold' }}>✅ Verified</span>
                                     ) : (

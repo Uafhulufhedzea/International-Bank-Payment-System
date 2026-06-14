@@ -20,8 +20,10 @@ jobs:
             - v1-backend-deps-
 
       - run:
-          name: Install Backend Dependencies
-          command: cd backend && npm install
+          name: Install Build Tools & Backend Dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install -y python3 make g++
+            cd backend && npm install
 
       - save_cache:
           paths:
@@ -52,6 +54,7 @@ jobs:
             fi
             npx sonar-scanner \
               -Dsonar.projectKey=international-bank-payment-system \
+              -Dsonar.organization=uafhulufhedzea \
               -Dsonar.projectName="International Bank Payment System" \
               -Dsonar.sources=backend,src \
               -Dsonar.exclusions=**/node_modules/**,**/key.pem,**/cert.pem \

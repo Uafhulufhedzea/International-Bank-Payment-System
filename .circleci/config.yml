@@ -4,7 +4,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: cimg/node:20.11.0 # Secure, verified CircleCI Node image base
+      - image: cimg/node:20.18 # Secure, verified CircleCI Node image base
     working_directory: ~/repo
 
 jobs:
@@ -16,19 +16,21 @@ jobs:
       # Restore dependency cache to optimize pipeline execution speed
       - restore_cache:
           keys:
-            - v1-backend-deps-{{ checksum "backend/package.json" }}
-            - v1-backend-deps-
+            - v2-backend-deps-{{ checksum "backend/package.json" }}
+            - v2-backend-deps-
 
       - run:
-          name: Install Build Tools & Backend Dependencies
-          command: |
-            sudo apt-get update && sudo apt-get install -y python3 make g++
-            cd backend && npm install
+          name: Install Build Tools
+          command: sudo apt-get update && sudo apt-get install -y python3 make g++ || true
+
+      - run:
+          name: Install Backend Dependencies
+          command: cd backend && npm install --ignore-scripts=false
 
       - save_cache:
           paths:
             - backend/node_modules
-          key: v1-backend-deps-{{ checksum "backend/package.json" }}
+          key: v2-backend-deps-{{ checksum "backend/package.json" }}
 
       # SOFTWARE COMPOSITION ANALYSIS (SCA)
       # Scans third-party packages for hidden risks.
